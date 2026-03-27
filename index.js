@@ -9,6 +9,10 @@ app.get('/about', (req, res) => {
   res.send('This is my server!');
 });
 
+app.get('/dark', (req, res) => {
+  res.send('hello from the other side!');
+});
+
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
