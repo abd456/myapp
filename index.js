@@ -1,26 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 
-// app.get('/', (req, res) => {
-//   res.send('Hello from pixelvoid.me!');
-// });
-
 app.get('/', (req, res) => {
-  res.send('auto deployed!');
+  res.send(`Hello from ${process.env.APP_NAME}!`);
 });
 
-app.get('/about', (req, res) => {
-  res.send('This is my server!');
-});
-
-app.get('/dark', (req, res) => {
-  res.send('hello from the other side!');
-});
-
-app.get('/hello', (req, res) => {
-  res.send('see ya later!');
-});
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
