@@ -13,6 +13,10 @@ app.get('/dark', (req, res) => {
   res.send('hello from the other side!');
 });
 
+app.get('/hello', (req, res) => {
+  res.send('see ya later!');
+});
+
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
