@@ -13,17 +13,33 @@ const pool = new Pool({
   database: process.env.DB_NAME,
 });
 
-app.get('/', (req, res) => {
-  res.send(`Hello from ${process.env.APP_NAME}!`);
+// GET all notes
+app.get('/notes', async (req, res) => {
+  const result = await pool.query('SELECT * FROM notes ORDER BY created_at DESC');
+  res.json(result.rows);
 });
 
-app.get('/db-test', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.json({ time: result.rows[0].now, status: 'Database connected!' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+// GET single note
+app.get('/notes/:id', async (req, res) => {
+  const result = await pool.query('SELECT * FROM notes WHERE id = $1', [req.params.id]);
+  if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
+  res.json(result.rows[0]);
+});
+
+// POST create note
+app.post('/notes', async (req, res) => {
+  const { title, body } = req.body;
+  const result = await pool.query(
+    'INSERT INTO notes (title, body) VALUES ($1, $2) RETURNING *',
+    [title, body]
+  );
+  res.status(201).json(result.rows[0]);
+});
+
+// DELETE note
+app.delete('/notes/:id', async (req, res) => {
+  await pool.query('DELETE FROM notes WHERE id = $1', [req.params.id]);
+  res.json({ message: 'Deleted' });
 });
 
 app.listen(process.env.PORT, () => {
